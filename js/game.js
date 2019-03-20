@@ -22,12 +22,11 @@ let offsetY = 0;
 var game = new Phaser.Game(config);
 
 function preload() {
-    this.load.image('Castle', 'assets/Castle.png');
     this.load.image('Grass', 'assets/Grass.png');
     this.load.image('Tree', 'assets/Tree.png');
     this.load.image('Sea', 'assets/Sea.png');
-    this.load.image('Boat', 'assets/Boat.png');
-    this.load.image('Dark', 'assets/Dark.png');
+    this.load.image('Boat1', 'assets/Boat1.png');
+    this.load.image('Boat2', 'assets/Boat2.png');
     this.load.image('Sand', 'assets/Sand.png');
     noise.seed(Math.random());
     cursors = this.input.keyboard.createCursorKeys();
@@ -38,10 +37,11 @@ function create() {
 }
 
 function update() {
-    if (cursors.left.isDown) { offsetX -= speed; draw(this); }
-    else if (cursors.right.isDown) { offsetX += speed; draw(this); }
-    else if (cursors.up.isDown) { offsetY += speed; draw(this); }
-    else if (cursors.down.isDown) { offsetY -= speed; draw(this); }
+    if (cursors.left.isDown) { offsetX -= speed; }
+    else if (cursors.right.isDown) { offsetX += speed; }
+    else if (cursors.up.isDown) { offsetY -= speed; }
+    else if (cursors.down.isDown) { offsetY += speed; }
+    draw(this);
 }
 
 function draw(scene) {
@@ -51,36 +51,30 @@ function draw(scene) {
             let posX = (x * tilesize) + 8;
             let posY = (y * tilesize) + 8;
 
-            let value = noise.simplex2((x + offsetX) / 20, (y + offsetY) / 20);
-            if (between(value, -1, -0.6)) {
-                scene.add.image(posX, posY, 'Grass');
+            let value = noise.simplex2((x + offsetX) / 30, (y + offsetY) / 30);
+            if (between(value, -1, -0.5)) {
+                scene.add.image(posX, posY, 'Grass').setAlpha(Math.abs(value + 1.5));
             }
-            else if (between(value, -0.6, -0.5)) {
+            else if (between(value, -0.5, -0.4)) {
                 scene.add.image(posX, posY, 'Sand');
             }
             else {
-                scene.add.image(posX, posY, 'Sea');
+                scene.add.image(posX, posY, 'Sea').setAlpha(Math.abs(1 - (value/2)));
             }
 
             if (between(value, 0.2, 0.201)) {
-                scene.add.image(posX, posY, 'Boat');
+                scene.add.image(posX, posY, 'Boat1');
             }
-            else if (between(value, 0.6, 1)) {
-                for (let index = 0; index < Math.round(value * 3); index++) {
-                    scene.add.image(posX, posY, 'Dark');       
-                }
+            else if (between(value, 0.201, 0.2015)) {
+                scene.add.image(posX, posY, 'Boat2');
             }
-
-            if (between(value, -0.9, -0.8)) {
-                scene.add.image(posX, posY, 'Tree');
-            }
-            else if (between(value, -1, -0.9)) {
-                scene.add.image(posX, posY, 'Castle');
+            else if (between(value, -1, -0.65)) {
+                scene.add.image(posX, posY, 'Tree').setAlpha(Math.abs(value + 1.5));
             }
         }
     }
 }
 
-function between (value1, value2, value3) {
+function between(value1, value2, value3) {
     return (value2 < value1 && value1 < value3)
 }
