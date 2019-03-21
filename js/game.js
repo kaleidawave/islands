@@ -23,7 +23,9 @@ var game = new Phaser.Game(config);
 
 function preload() {
     this.load.image('Grass', 'assets/Grass.png');
-    this.load.image('Tree', 'assets/Tree.png');
+    this.load.image('Tree1', 'assets/Tree1.png');
+    this.load.image('Tree2', 'assets/Tree2.png');
+    this.load.image('Tree3', 'assets/Tree3.png');
     this.load.image('Sea', 'assets/Sea.png');
     this.load.image('Boat1', 'assets/Boat1.png');
     this.load.image('Boat2', 'assets/Boat2.png');
@@ -69,7 +71,17 @@ function draw(scene) {
                 scene.add.image(posX, posY, 'Boat2');
             }
             else if (between(value, -1, -0.65)) {
-                scene.add.image(posX, posY, 'Tree').setAlpha(Math.abs(value + 1.5));
+                value2 = value.toString().slice(-1);
+                if (value2 > 6) {
+                    scene.add.image(posX, posY, 'Tree1');
+                }
+                else if (value2 > 3) {
+                    scene.add.image(posX, posY, 'Tree2');
+                }
+                else {
+                    scene.add.image(posX, posY, 'Tree3');
+                }
+                
             }
         }
     }
